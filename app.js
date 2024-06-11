@@ -12,12 +12,16 @@ app.set("views", "views");
 const postRoutes = require("./routes/post");
 const adminRoutes = require("./routes/admin");
 
+const User = require("./models/user");
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use("/post", (req, res, next) => {
-  console.log("i am post middleware");
-  next();
+app.use((req, res, next) => {
+  User.findById("666863be67669a19d8514cc0").then((user) => {
+    req.user = user;
+    next();
+  });
 });
 
 app.use("/admin", adminRoutes);
@@ -29,5 +33,17 @@ mongoose
     console.log(res);
     app.listen(8080);
     console.log("connected to mongodb");
+
+    return User.findOne().then((user) => {
+      if (!user) {
+        User.create({
+          username: "BoSwar",
+          email: "mkks@gmail.com",
+          password: "mkks.mkks123",
+        });
+      }
+      return user;
+    });
   })
+  .then((result) => console.log(result))
   .catch((err) => console.log(err));
