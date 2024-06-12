@@ -7,7 +7,11 @@
 </p>
 <% if(isLogin){ %>
 <a href="/admin/create-post">Add a new post</a>
+<form action="/logout" method="post">
+  <button>Logout</button>
+</form>
 <% } else { %>
+
 <a href="/login">Create a new Account</a>
 <% } %>
 <hr />
