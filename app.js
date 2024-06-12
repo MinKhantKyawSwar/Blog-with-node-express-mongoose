@@ -33,12 +33,12 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  User.findById("666863be67669a19d8514cc0").then((user) => {
-    req.user = user;
-    next();
-  });
-});
+// app.use((req, res, next) => {
+//   User.findById("666863be67669a19d8514cc0").then((user) => {
+//     req.user = user;
+//     next();
+//   });
+// });
 
 app.use("/admin", adminRoutes);
 app.use(postRoutes);
@@ -47,20 +47,7 @@ app.use(authRoutes);
 mongoose
   .connect(process.env.MONGODB_URL)
   .then((res) => {
-    console.log(res);
     app.listen(8080);
     console.log("connected to mongodb");
-
-    return User.findOne().then((user) => {
-      if (!user) {
-        User.create({
-          username: "BoSwar",
-          email: "mkks@gmail.com",
-          password: "mkks.mkks123",
-        });
-      }
-      return user;
-    });
   })
-  .then((result) => console.log(result))
   .catch((err) => console.log(err));

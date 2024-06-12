@@ -9,7 +9,6 @@ exports.createPost = (req, res) => {
     userId: req.user,
   })
     .then((result) => {
-      console.log(result);
       res.redirect("/");
     })
     .catch((err) => console.log(err));
@@ -22,13 +21,13 @@ exports.renderCreatePage = (req, res) => {
 exports.renderHomePage = (req, res) => {
   //isLogin = true
   // const cookie = req.get("Cookie").split("=")[1].trim() === "true";
-  console.log(req.session.isLogin);
+  // console.log(req.session.isLogin);
   Post.find()
     .select("title")
     .populate("userId", "username")
     .sort({ title: 1 })
     .then((posts) => {
-      console.log(posts);
+      // console.log(posts);
       res.render("home", {
         title: "Homepage",
         postsArr: posts,
