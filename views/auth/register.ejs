@@ -3,6 +3,7 @@
     <a href="/">Go back home</a>
     <h1 class="title">Register now!</h1>
     <form action="/register" method="post">
+  <input hidden value="<%= csrfToken %>" name="_csrf" />
       <div>
         <label for="email">Enter email</label>
         <input type="text" id="email" name="email" />
