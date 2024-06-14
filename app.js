@@ -6,6 +6,7 @@ const dotenv = require("dotenv").config();
 const session = require("express-session");
 const mongoStore = require("connect-mongodb-session")(session);
 const csrf = require("csurf");
+const flash = require("connect-flash");
 
 const app = express();
 
@@ -38,7 +39,10 @@ app.use(
   })
 );
 
+//middleware for validation
 app.use(csrfProtect);
+// middleware for storing messages
+app.use(flash());
 
 app.use((req, res, next) => {
   if (req.session.isLogin === undefined) {

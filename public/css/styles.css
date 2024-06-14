@@ -64,3 +64,11 @@ button,
 .details p {
   font-size: 17px;
 }
+
+.msg-box {
+  width: 100%;
+  text-align: center;
+  color: red;
+  border: 1px solid red;
+  padding: 4px 10px;
+}

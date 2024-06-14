@@ -3,7 +3,13 @@ const User = require("../models/user");
 
 // render register page
 exports.getRegisterPage = (req, res) => {
-  res.render("auth/register", { title: "Register" });
+  let message = req.flash("regError");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message: null;
+  }
+  res.render("auth/register", { title: "Register", errorMsg: message });
 };
 
 //handle register page
@@ -12,6 +18,10 @@ exports.registerAccount = (req, res) => {
   User.findOne({ email })
     .then((user) => {
       if (user) {
+        req.flash(
+          "regError",
+          "You already have an account with this email address!"
+        );
         return res.redirect("/register");
       }
       return bcrypt
@@ -31,7 +41,13 @@ exports.registerAccount = (req, res) => {
 
 //render login page
 exports.getLoginPage = (req, res) => {
-  res.render("auth/login", { title: "Login" });
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message: null;
+  }
+  res.render("auth/login", { title: "Login", errorMsg: message });
 };
 
 //handle login
@@ -41,6 +57,7 @@ exports.postLoginData = (req, res) => {
   User.findOne({ email })
     .then((user) => {
       if (!user) {
+        req.flash("error", "Check Your Information and Try Again!");
         return res.redirect("/login");
       }
       bcrypt
