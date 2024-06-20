@@ -1,16 +1,21 @@
 <%- include("./includes/head") %>
 <section class="details">
   <h1><%= post.title %></h1>
+  <a href="/">Go Back</a>
   <img src="<%= post.imgUrl %>" alt="<%= post.title %>" />
+  <hr />
   <p><%= post.description %></p>
   <% if (post.userId.toString() === currentLoginUserId.toString()) {%>
-  <a href="/admin/edit/<%= post._id %>" class="btn-full">Edit</a>
-  <form action="/admin/delete/<%= post._id %>" method="post">
-    <input hidden value="<%= csrfToken %>" name="_csrf" />
-    <button>Delete</button>
-  </form>
+  <div class="login-div">
+    <div>
+      <form action="/admin/delete/<%= post._id %>" method="post">
+        <input hidden value="<%= csrfToken %>" name="_csrf" />
+        <button>Delete</button>
+      </form>
+      <a href="/admin/edit/<%= post._id %>" class="btn-full">Edit</a>
+    </div>
+  </div>
+
   <% } %>
 </section>
 <%- include("./includes/foot") %>
-<!-- 32 -->
-<!-- 31:36 -->
