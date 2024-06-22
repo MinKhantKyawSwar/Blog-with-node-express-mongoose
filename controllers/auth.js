@@ -152,7 +152,11 @@ exports.getResetPage = (req, res) => {
   } else {
     message: null;
   }
-  res.render("auth/reset", { title: "Reset Password", errorMsg: message });
+  res.render("auth/reset", {
+    title: "Reset Password",
+    errorMsg: message,
+    oldFormData: { email: "" },
+  });
 };
 
 //render feedback page
@@ -163,6 +167,16 @@ exports.getfeedbackPage = (req, res) => {
 //reset password link send
 exports.resetLinkSend = (req, res) => {
   const { email } = req.body;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).render("auth/reset", {
+      title: "Reset Password",
+      errorMsg: errors.array()[0].msg,
+      oldFormData: { email },
+    });
+  }
+
   crypto.randomBytes(32, (err, buffer) => {
     if (err) {
       console.log(err);
@@ -172,6 +186,11 @@ exports.resetLinkSend = (req, res) => {
     User.findOne({ email })
       .then((user) => {
         if (!user) {
+          return res.status(422).render("auth/reset", {
+            title: "Reset Password",
+            errorMsg: "No account exists with this email",
+            oldFormData: { email },
+          });
           req.flash("error", "No account found with this email.");
           return res.redirect("/reset-password");
         }

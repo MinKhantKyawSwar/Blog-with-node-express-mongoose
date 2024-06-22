@@ -43,7 +43,7 @@
   <div class="post-box">
     <p class="post-title"><%= post.title %></p>
     <p class="post-email">posted by :<%= post.userId.email %></p>
-    <p class="post-des"><%= post.description.substr(0,300)%></p>
+    <p class="post-des"><%= post.description.substr(0,100)%></p>
     <a class="btn" href="/post/<%= post._id %>">Read More...</a>
     <hr />
   </div>
