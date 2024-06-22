@@ -61,7 +61,11 @@ exports.registerAccount = (req, res) => {
           subject: "Register Successful",
           html: "<h1>Your account is successfully registered.</h1><p>Create wonderful blogs here in Blog.io</p>",
         },
-        (err) => console.log(err)
+        (err) => {
+          console.log(err);
+          const error = new Error("Something went wrong");
+          return next(error);
+        }
       );
     });
 };
@@ -132,9 +136,17 @@ exports.postLoginData = (req, res) => {
             },
           });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          const error = new Error("Something went wrong");
+          return next(error);
+        });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      const error = new Error("Something went wrong");
+      return next(error);
+    });
 };
 
 //handle logout
@@ -209,11 +221,15 @@ exports.resetLinkSend = (req, res) => {
           },
           (err) => {
             console.log(err);
+            const error = new Error("Something went wrong");
+            return next(error);
           }
         );
       })
       .catch((err) => {
         console.log(err);
+        const error = new Error("Something went wrong");
+        return next(error);
       });
   });
 };
@@ -246,7 +262,11 @@ exports.getNewPasswordPage = (req, res) => {
         res.redirect("/");
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      const error = new Error("Something went wrong");
+      return next(error);
+    });
 };
 
 //change new password
@@ -283,5 +303,9 @@ exports.changeNewPassword = (req, res) => {
     .then(() => {
       return res.redirect("login");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      const error = new Error("Something went wrong");
+      return next(error);
+    });
 };
