@@ -65,7 +65,6 @@ exports.getPost = (req, res) => {
   Post.findById(postId)
     .populate("userId", "email")
     .then((post) => {
-      console.log(post);
       res.render("details", {
         title: post.title,
         post,

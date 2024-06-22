@@ -285,5 +285,3 @@ exports.changeNewPassword = (req, res) => {
     })
     .catch((err) => console.log(err));
 };
-//33.1
-//1:15:05
