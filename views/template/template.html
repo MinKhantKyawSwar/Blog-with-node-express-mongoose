@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF Document</title>
+  </head>
+  <body>
+    <h1>{{post.title}}</h1>
+    <p>Author:{{post.userId.email}}</p>
+    <br />
+    <br />
+    <br />
+    <img
+      src="http://localhost:8080/{{post.imgUrl}}"
+      alt="{{ post.title }}"
+      height="1000"
+    />
+    <p>{{post.description}}</p>
+  </body>
+</html>

@@ -1,6 +1,12 @@
 const Post = require("../models/post");
 const { validationResult } = require("express-validator");
 const { formatISO9075 } = require("date-fns");
+const pdf = require("pdf-creator-node");
+
+const fs = require("fs");
+const exPath = require("path");
+
+const fileDelete = require("../utils/fileDelete");
 
 exports.createPost = (req, res, next) => {
   const { title, description } = req.body;
@@ -130,15 +136,15 @@ exports.updatePost = (req, res, next) => {
   const image = req.file;
   const errors = validationResult(req);
 
-  // if (image === undefined) {
-  //   return res.status(422).render("editPost", {
-  //     postId,
-  //     title,
-  //     isValidationFail: true,
-  //     errorMsg: "Image extension must be jpg,png and jpeg.",
-  //     oldFormData: { title, description },
-  //   });
-  // }
+  if (image === undefined) {
+    return res.status(422).render("editPost", {
+      postId,
+      title,
+      isValidationFail: true,
+      errorMsg: "Image extension must be jpg,png and jpeg.",
+      oldFormData: { title, description },
+    });
+  }
 
   if (!errors.isEmpty()) {
     return res.status(422).render("editPost", {
@@ -161,6 +167,7 @@ exports.updatePost = (req, res, next) => {
       post.title = title;
       post.description = description;
       if (image) {
+        fileDelete(post.imgUrl);
         post.imgUrl = image.path;
       }
       return post.save().then(() => {
@@ -177,10 +184,85 @@ exports.updatePost = (req, res, next) => {
 
 exports.deletePost = (req, res, next) => {
   const { postId } = req.params;
-  Post.deleteOne({ _id: postId, userId: req.user._id })
+  Post.findById(postId)
+    .then((post) => {
+      if (!post) {
+        return res.redirect("/");
+      }
+      fileDelete(post.imgUrl);
+      return Post.deleteOne({ _id: postId, userId: req.user._id });
+    })
     .then(() => {
       console.log("post deleted");
       res.redirect("/");
+    })
+    .catch((err) => {
+      console.log(err);
+      const error = new Error("Something went wrong");
+      return next(error);
+    });
+};
+
+exports.savePostAsPDF = (req, res, next) => {
+  const { id } = req.params;
+  const templateUrl = `${exPath.join(
+    __dirname,
+    "../views/template/template.html"
+  )}`;
+  const html = fs.readFileSync(templateUrl, "utf8");
+
+  const options = {
+    format: "A3",
+    orientation: "portrait",
+    border: "10mm",
+    header: {
+      height: "45mm",
+      contents:
+        '<div style="text-align: center;">Delivered from MinKhantDev</div>',
+    },
+    footer: {
+      height: "28mm",
+      contents: {
+        first: "Cover page",
+        default:
+          '<span style="color: #444;text-align: center">@minkhantblog.mm</span>', // fallback value
+        last: "Last Page",
+      },
+    },
+  };
+
+  Post.findById(id)
+    .populate("userId", "email")
+    .lean()
+    .then((post) => {
+      // console.log(post);
+      const date = new Date();
+      const pdfSaveUrl = `${exPath.join(
+        __dirname,
+        "../public/pdf",
+        date.getTime() + ".pdf"
+      )}`; // controllers/post.js -> public/pdf/12:12.pdf
+      const document = {
+        html,
+        data: {
+          post,
+        },
+        path: pdfSaveUrl,
+        type: "",
+      };
+      console.log(post);
+      pdf
+        .create(document, options)
+        .then((result) => {
+          // console.log(result);
+          res.download(pdfSaveUrl, (err) => {
+            if (err) throw err;
+            fileDelete(pdfSaveUrl);
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     })
     .catch((err) => {
       console.log(err);
