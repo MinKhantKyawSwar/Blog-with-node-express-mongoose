@@ -13,7 +13,6 @@ router.post(
     body("title")
       .isLength({ min: 10 })
       .withMessage("Title must have at least 10 letters."),
-    body("photo").isURL().withMessage("Image URL must be a valid URL."),
     body("description")
       .isLength({ min: 30 })
       .withMessage("Description must have at least 30 letters."),
@@ -30,7 +29,6 @@ router.post(
     body("title")
       .isLength({ min: 10 })
       .withMessage("Title must have at least 10 letters."),
-    body("photo").isURL().withMessage("Image URL must be a valid URL."),
     body("description")
       .isLength({ min: 30 })
       .withMessage("Description must have at least 30 letters."),
