@@ -2,17 +2,17 @@
 <section class="details">
   <div>
     <h1><%= post.title %></h1>
-    <a href="/"> Go Back</a>
+    <a href="/">Go back</a>
   </div>
-  <p class="tmp">Posted by : <%= post.userId.email %></p>
-  <% if (date) {%>
-  <p class="tmp">Uploaded at : <%= date %></p>
+  <p class="tmp">Post by - <%= post.userId.email %></p>
+  <% if(date) { %>
+  <p class="tmp">Upload at - <%= date %></p>
   <% } %>
   <a href="/save/<%= post._id %>">Save to device</a>
   <img src="<%= '/' + post.imgUrl %>" alt="<%= post.title %>" />
   <hr />
   <p class="des"><%= post.description %></p>
-  <% if (post.userId._id.toString() === currentLoginUserId.toString()) {%>
+  <% if(post.userId._id.toString() === currentLoginUserId.toString()) { %>
   <div class="login-div">
     <div>
       <form action="/admin/delete/<%= post._id %>" method="post">
@@ -22,7 +22,6 @@
       <a href="/admin/edit/<%= post._id %>" class="btn-full">Edit</a>
     </div>
   </div>
-
   <% } %>
 </section>
 <%- include("./includes/foot") %>

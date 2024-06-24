@@ -95,7 +95,7 @@ exports.getPost = (req, res, next) => {
           : "",
         currentLoginUserId: req.session.userInfo
           ? req.session.userInfo._id
-          : undefined,
+          : "",
       });
     })
     .catch((err) => {
@@ -216,17 +216,15 @@ exports.savePostAsPDF = (req, res, next) => {
     orientation: "portrait",
     border: "10mm",
     header: {
-      height: "45mm",
+      height: "20mm",
       contents:
         '<div style="text-align: center;">Delivered from MinKhantDev</div>',
     },
     footer: {
-      height: "28mm",
+      height: "15mm",
       contents: {
-        first: "Cover page",
         default:
-          '<span style="color: #444;text-align: center">@minkhantblog.mm</span>', // fallback value
-        last: "Last Page",
+          '<p style="color: #444;text-align: center">@minkhantblog.mm</p>', // fallback value
       },
     },
   };
@@ -235,7 +233,6 @@ exports.savePostAsPDF = (req, res, next) => {
     .populate("userId", "email")
     .lean()
     .then((post) => {
-      // console.log(post);
       const date = new Date();
       const pdfSaveUrl = `${exPath.join(
         __dirname,

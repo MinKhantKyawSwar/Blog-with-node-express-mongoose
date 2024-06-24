@@ -4,18 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PDF Document</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <h1>{{post.title}}</h1>
-    <p>Author:{{post.userId.email}}</p>
-    <br />
-    <br />
-    <br />
+    <h1 class="font-family: 'Poppins', sans-serif;">{{post.title}}</h1>
+    <p>Author - {{post.userId.email}}</p>
     <img
       src="http://localhost:8080/{{post.imgUrl}}"
-      alt="{{ post.title }}"
-      height="1000"
+      width="100%"
+      alt="{{post.title}}"
     />
-    <p>{{post.description}}</p>
+    <hr />
+    <p style="font-family: 'Poppins', sans-serif">{{post.description}}</p>
   </body>
 </html>
