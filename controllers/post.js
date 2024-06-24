@@ -8,6 +8,8 @@ const exPath = require("path");
 
 const fileDelete = require("../utils/fileDelete");
 
+const POST_PER_PAGE = 3;
+
 exports.createPost = (req, res, next) => {
   const { title, description } = req.body;
   const image = req.file;
@@ -61,19 +63,59 @@ exports.renderCreatePage = (req, res, next) => {
 };
 
 exports.renderHomePage = (req, res, next) => {
+  const pageNumber = +req.query.page || 1;
+  let totalPostNumber;
+  // total => 6 , 12
+  // per page => 3
+  // next page => -3 + 3
+
+  //page 1 => 1 - 1 = 1
+  //post per page => 3 * 0 = 0 <- skip post
+
+  //page 2 => 2 - 1 = 1
+  //post per page => 3 * 1 = 3  <- skip post
+
+  //total post => **6 posts
+
+  //page 3 => 3 - 1 = 2
+  //post per page => 3 * 2 = **6 <- skip post
+
+  //total post => **9 posts
+
+  //page 4 => 4 - 1 = 3
+  //post per page => 3 * 3 = **9 <- skip post
   Post.find()
-    .select("title description")
-    .populate("userId", "email")
-    .sort({ title: 1 })
+    .countDocuments()
+    .then((totalPostCount) => {
+      totalPostNumber = totalPostCount;
+      return Post.find()
+        .select("title description")
+        .populate("userId", "email")
+        .skip((pageNumber - 1) * POST_PER_PAGE)
+        .limit(POST_PER_PAGE)
+        .sort({ createdAt: -1 });
+    })
+
     .then((posts) => {
-      // console.log(posts);
-      res.render("home", {
-        title: "Homepage",
-        postsArr: posts,
-        currentUserEmail: req.session.userInfo
-          ? req.session.userInfo.email
-          : "",
-      });
+      if (posts.length > 0) {
+        res.render("home", {
+          title: "Homepage",
+          postsArr: posts,
+          currentUserEmail: req.session.userInfo
+            ? req.session.userInfo.email
+            : "",
+          currentPage: pageNumber,
+          hasNextPage: POST_PER_PAGE * pageNumber < totalPostNumber,
+          hasPreviousPage: pageNumber > 1,
+          nextPage: pageNumber + 1,
+          previousPage: pageNumber - 1,
+        });
+      } else {
+        res.status(500).render("error/500", {
+          title: "Something went wrong.",
+          message: "No post in this page query.",
+        });
+      }
     })
     .catch((err) => {
       console.log(err);
