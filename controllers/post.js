@@ -1,14 +1,14 @@
 const Post = require("../models/post");
 const { validationResult } = require("express-validator");
-const { formatISO9075 } = require("date-fns");
+const formatISO9075 = require("date-fns/formatISO9075");
 const pdf = require("pdf-creator-node");
 
 const fs = require("fs");
-const exPath = require("path");
+const expath = require("path");
 
 const fileDelete = require("../utils/fileDelete");
 
-const POST_PER_PAGE = 6;
+const POST_PAR_PAGE = 6;
 
 exports.createPost = (req, res, next) => {
   const { title, description } = req.body;
@@ -25,39 +25,27 @@ exports.createPost = (req, res, next) => {
 
   if (!errors.isEmpty()) {
     return res.status(422).render("addPost", {
-      title: "Create Post",
+      title: "Post create",
       errorMsg: errors.array()[0].msg,
-      oldFormData: {
-        title,
-        description,
-      },
+      oldFormData: { title, description },
     });
   }
 
-  Post.create({
-    title,
-    description,
-    imgUrl: image.path,
-    userId: req.user,
-  })
+  Post.create({ title, description, imgUrl: image.path, userId: req.user })
     .then((result) => {
       res.redirect("/");
     })
     .catch((err) => {
       console.log(err);
-      const error = new Error("Something went wrong when creating your blog.");
+      const error = new Error("Something Went Wrong");
       return next(error);
     });
 };
 
 exports.renderCreatePage = (req, res, next) => {
   res.render("addPost", {
-    title: "Post create ml",
-    oldFormData: {
-      title: "",
-      description: "",
-      photo: "",
-    },
+    title: "Post create",
+    oldFormData: { title: "", description: "", photo: "" },
     errorMsg: "",
   });
 };
@@ -65,25 +53,6 @@ exports.renderCreatePage = (req, res, next) => {
 exports.renderHomePage = (req, res, next) => {
   const pageNumber = +req.query.page || 1;
   let totalPostNumber;
-  // total => 6 , 12
-  // per page => 3
-  // next page => -3 + 3
-
-  //page 1 => 1 - 1 = 1
-  //post per page => 3 * 0 = 0 <- skip post
-
-  //page 2 => 2 - 1 = 1
-  //post per page => 3 * 1 = 3  <- skip post
-
-  //total post => **6 posts
-
-  //page 3 => 3 - 1 = 2
-  //post per page => 3 * 2 = **6 <- skip post
-
-  //total post => **9 posts
-
-  //page 4 => 4 - 1 = 3
-  //post per page => 3 * 3 = **9 <- skip post
   Post.find()
     .countDocuments()
     .then((totalPostCount) => {
@@ -91,35 +60,32 @@ exports.renderHomePage = (req, res, next) => {
       return Post.find()
         .select("title description imgUrl")
         .populate("userId", "email")
-        .skip((pageNumber - 1) * POST_PER_PAGE)
-        .limit(POST_PER_PAGE)
+        .skip((pageNumber - 1) * POST_PAR_PAGE)
+        .limit(POST_PAR_PAGE)
         .sort({ createdAt: -1 });
     })
-
     .then((posts) => {
       if (posts.length > 0) {
-        res.render("home", {
+        return res.render("home", {
           title: "Homepage",
           postsArr: posts,
-          // currentUserEmail: req.session.userInfo
-          //   ? req.session.userInfo.email
-          //   : "",
           currentPage: pageNumber,
-          hasNextPage: POST_PER_PAGE * pageNumber < totalPostNumber,
+          hasNextPage: POST_PAR_PAGE * pageNumber < totalPostNumber,
           hasPreviousPage: pageNumber > 1,
           nextPage: pageNumber + 1,
           previousPage: pageNumber - 1,
+          currentUserID: req.session.userInfo ? req.session.userInfo._id : "",
         });
       } else {
-        res.status(500).render("error/500", {
+        return res.status(500).render("error/500", {
           title: "Something went wrong.",
-          message: "No post in this page query.",
+          message: "no post in this page query.",
         });
       }
     })
     .catch((err) => {
       console.log(err);
-      const error = new Error("Something went wrong.");
+      const error = new Error("Something Went Wrong");
       return next(error);
     });
 };
@@ -134,7 +100,7 @@ exports.getPost = (req, res, next) => {
         post,
         date: post.createdAt
           ? formatISO9075(post.createdAt, { representation: "date" })
-          : "",
+          : undefined,
         currentLoginUserId: req.session.userInfo
           ? req.session.userInfo._id
           : "",
@@ -142,7 +108,7 @@ exports.getPost = (req, res, next) => {
     })
     .catch((err) => {
       console.log(err);
-      const error = new Error("Post not Found with this id.");
+      const error = new Error("Post not found with this ID.");
       return next(error);
     });
 };
@@ -168,35 +134,23 @@ exports.getEditPost = (req, res, next) => {
     })
     .catch((err) => {
       console.log(err);
-      const error = new Error("Something went wrong");
+      const error = new Error("Something Went Wrong");
       return next(error);
     });
 };
 
 exports.updatePost = (req, res, next) => {
   const { postId, title, description } = req.body;
+
   const image = req.file;
   const errors = validationResult(req);
-
-  if (image === undefined) {
-    return res.status(422).render("editPost", {
-      postId,
-      title,
-      isValidationFail: true,
-      errorMsg: "Image extension must be jpg,png and jpeg.",
-      oldFormData: { title, description },
-    });
-  }
 
   if (!errors.isEmpty()) {
     return res.status(422).render("editPost", {
       postId,
       title,
       errorMsg: errors.array()[0].msg,
-      oldFormData: {
-        title,
-        description,
-      },
+      oldFormData: { title, description },
       isValidationFail: true,
     });
   }
@@ -219,7 +173,7 @@ exports.updatePost = (req, res, next) => {
     })
     .catch((err) => {
       console.log(err);
-      const error = new Error("Something went wrong");
+      const error = new Error("Something Went Wrong");
       return next(error);
     });
 };
@@ -235,24 +189,23 @@ exports.deletePost = (req, res, next) => {
       return Post.deleteOne({ _id: postId, userId: req.user._id });
     })
     .then(() => {
-      console.log("post deleted");
+      console.log("Post Deleted!!");
       res.redirect("/");
     })
     .catch((err) => {
       console.log(err);
-      const error = new Error("Something went wrong");
+      const error = new Error("Something Went Wrong");
       return next(error);
     });
 };
 
 exports.savePostAsPDF = (req, res, next) => {
   const { id } = req.params;
-  const templateUrl = `${exPath.join(
+  const templateUrl = `${expath.join(
     __dirname,
     "../views/template/template.html"
   )}`;
   const html = fs.readFileSync(templateUrl, "utf8");
-
   const options = {
     format: "A3",
     orientation: "portrait",
@@ -260,27 +213,19 @@ exports.savePostAsPDF = (req, res, next) => {
     header: {
       height: "20mm",
       contents:
-        '<div style="text-align: center;">Delivered from MinKhantDev</div>',
-    },
-    footer: {
-      height: "15mm",
-      contents: {
-        default:
-          '<p style="color: #444;text-align: center">@minkhantblog.mm</p>', // fallback value
-      },
+        '<h4 style="text-align: center;">PDF DOWNLOAD FROM BLOG.IO</h4>',
     },
   };
-
   Post.findById(id)
     .populate("userId", "email")
     .lean()
     .then((post) => {
       const date = new Date();
-      const pdfSaveUrl = `${exPath.join(
+      const pdfSaveUrl = `${expath.join(
         __dirname,
         "../public/pdf",
         date.getTime() + ".pdf"
-      )}`; // controllers/post.js -> public/pdf/12:12.pdf
+      )}`;
       const document = {
         html,
         data: {
@@ -289,11 +234,10 @@ exports.savePostAsPDF = (req, res, next) => {
         path: pdfSaveUrl,
         type: "",
       };
-      console.log(post);
       pdf
         .create(document, options)
         .then((result) => {
-          // console.log(result);
+          console.log(result);
           res.download(pdfSaveUrl, (err) => {
             if (err) throw err;
             fileDelete(pdfSaveUrl);
@@ -305,7 +249,7 @@ exports.savePostAsPDF = (req, res, next) => {
     })
     .catch((err) => {
       console.log(err);
-      const error = new Error("Something went wrong");
+      const error = new Error("Something Went Wrong");
       return next(error);
     });
 };

@@ -44,4 +44,18 @@ router.post("/delete/:postId", postController.deletePost);
 //profile
 router.get("/profile", userController.getProfile);
 
+//username
+router.get("/username", userController.renderUsernamePage);
+
+router.post(
+  "/setusername",
+  body("username")
+    .isLength({ min: 4 })
+    .withMessage("Username must have 4 letters."),
+  userController.setUsername
+);
+
+//premium
+router.get("/premium", userController.renderPremiumPage);
+
 module.exports = router;

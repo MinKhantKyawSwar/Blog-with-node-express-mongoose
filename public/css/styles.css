@@ -28,6 +28,16 @@ a {
   margin: 0 0;
   text-align: center;
 }
+
+/* for email */
+
+.post-email {
+  font-size: 15px;
+  margin: 10px 0;
+  font-weight: 600;
+  text-decoration: none !important;
+}
+
 nav {
   width: 60%;
   margin: 0 auto;
@@ -80,11 +90,30 @@ nav div {
   font-size: 18px;
   margin-bottom: 8px;
 }
-.post-email {
-  font-size: 16px;
-  margin: 10px 0;
-  font-weight: 600;
+.public-user {
+  text-align: center;
+  margin: 40px 0 20px 0;
 }
+.public-user i,
+.own-user i {
+  font-size: 5rem;
+}
+.own-user {
+  display: flex;
+  margin: 40px 0 20px 0;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.own-user .ic-em {
+  text-align: center;
+}
+
+.own-user-right a {
+  text-align: center;
+  width: 100%;
+}
+
 .details {
   width: 60%;
   margin: auto;
@@ -169,6 +198,43 @@ nav div {
   align-items: center;
   justify-content: center;
 }
+/* premuim  start*/
+
+.premium {
+  width: 60%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+}
+
+.card {
+  padding: 20px;
+  border: 2px solid black;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.card h3 {
+  font-size: 23px;
+  margin-bottom: 10px;
+}
+
+.card p {
+  background-color: #000;
+  color: #fff;
+  padding: 8px 10px;
+  font-size: 18px;
+  border-radius: 8px;
+}
+.card ul li {
+  list-style-type: none;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+/* premium end */
 
 /* global style */
 a {

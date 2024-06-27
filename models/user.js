@@ -13,6 +13,11 @@ const userSchema = new Schema({
     minLength: 4,
     required: true,
   },
+  username: {
+    type: String,
+    minLength: 3,
+    unique: true,
+  },
   resetToken: String,
   tokenExpiration: Date,
 });
