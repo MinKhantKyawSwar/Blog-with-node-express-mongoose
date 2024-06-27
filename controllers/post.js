@@ -237,7 +237,6 @@ exports.savePostAsPDF = (req, res, next) => {
       pdf
         .create(document, options)
         .then((result) => {
-          console.log(result);
           res.download(pdfSaveUrl, (err) => {
             if (err) throw err;
             fileDelete(pdfSaveUrl);

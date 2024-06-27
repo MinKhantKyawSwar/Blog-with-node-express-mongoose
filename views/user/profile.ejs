@@ -4,7 +4,18 @@
     <div class="ic-em">
       <i class="fa-solid fa-circle-user"></i>
       <h3>
-        <%= postsArr[0].userId.username ? postsArr[0].userId.username : "" %>
+        <% if(postsArr[0].userId.username){ %>
+        <p class="premium-username">
+          <%= postsArr[0].userId.username %> <% if(postsArr[0].userId.isPremium)
+          {%>
+          <i
+            class="fa-solid fa-star animate__animated animate__swing animate__slow animate__infinite infinite"
+          ></i>
+          <% } %>
+        </p>
+        <% } else { %>
+        <p class="premium-username"><%= postsArr[0].userId.username %></p>
+        <% } %>
       </h3>
       <p><%= currentUserEmail %></p>
     </div>

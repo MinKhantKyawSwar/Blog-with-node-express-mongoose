@@ -221,7 +221,7 @@ nav div {
   margin-bottom: 10px;
 }
 
-.card p {
+.card .checkout-btn {
   background-color: #000;
   color: #fff;
   padding: 8px 10px;
@@ -233,7 +233,10 @@ nav div {
   margin-bottom: 10px;
   font-size: 18px;
 }
-
+.premium-username i {
+  font-size: 18px;
+  color: gold;
+}
 /* premium end */
 
 /* global style */
