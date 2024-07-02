@@ -21,7 +21,12 @@
     </div>
     <div class="own-user-right">
       <a href="username">Set Username</a>
-      <a href="premium">Get io Premium</a>
+
+      <% if (postsArr[0].userId.isPremium){%>
+      <a href="premium-details">IO Premium Status</a>
+      <% } else{%>
+      <a href="premium">Get IO Premium</a>
+      <% }%>
     </div>
   </div>
   <div class="post-container">
@@ -37,7 +42,6 @@
       >
       <p class="post-des"><%= post.description.substr(0,100) %></p>
       <hr />
-      <p class="post-email">Post by : <%= post.userId.email %></p>
     </div>
     <% } %>
   </div>

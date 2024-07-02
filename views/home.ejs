@@ -21,16 +21,26 @@
       >
       <p class="post-des"><%= post.description.substr(0,100) %></p>
       <hr />
-      <% if(post.userId._id.toString() == currentUserID.toString() ){%>
-      <a href="/admin/profile" class="post-email"
-        ><span>Post by : </span><%= post.userId.email %></a
-      >
-      <%}else{%>
-      <a href="/profile/<%= post.userId._id %>" class="post-email"
-        ><span>Post by : </span><%= post.userId.email %></a
-      >
-      <%}%>
-      <hr />
+      <div class="user-index">
+        <a href="/profile/<%= post.userId._id %>" class="index-user-ic"
+          ><i class="fa-solid fa-circle-user"></i
+        ></a>
+        <div>
+          <p class="post-email"><%= post.userId.email %></p>
+          <% if(post.userId.isPremium){%>
+          <p class="post-email">
+            <%= post.userId.username %><i
+              class="fa-solid fa-star animate__animated animate__swing animate__slow animate__infinite infinite"
+            ></i>
+          </p>
+          <%}else{%>
+          <a href="/profile/<%= post.userId._id %>" class="post-email"
+            ><%= post.userId.username %></a
+          >
+          <%}%>
+          <hr />
+        </div>
+      </div>
     </div>
     <% } %>
   </div>
