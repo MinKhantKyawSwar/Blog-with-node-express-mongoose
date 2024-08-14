@@ -1,6 +1,5 @@
 <%- include("./includes/head") %>
 <section class="header">
-  <h1 class="title">Recent posts</h1>
   <% if(postsArr.length === 0 && isLogin) { %>
   <div>
     <h4>Nothing to see ?</h4>
@@ -36,7 +35,7 @@
           <% }%>
         </a>
         <% }else{ %>
-        <a href="/profile/<%= post.userId._id %>" class="index-user-ic"
+        <a href="/profile/<%= post.userId._id %>" class=""
           ><% if (post.userId.profile_imgUrl &&
           post.userId.isPremium ){ %>
           <img
@@ -45,7 +44,7 @@
             class="profie-photo-home"
           />
           <% }else{ %>
-          <i class="fa-solid fa-circle-user"></i>
+          <i class="fa-solid fa-circle-user index-user-ic"></i>
           <% }%>
         </a></a>
         <% } %>

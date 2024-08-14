@@ -1,40 +1,57 @@
 <%- include("../includes/head") %> <% if (postsArr.length > 0){%>
 <section class="header">
   <div class="own-user">
-    <div class="ic-email">
-      <% if (postsArr[0].userId.profile_imgUrl && postsArr[0].userId.isPremium
-      ){ %>
-      <img
-        src="<%= '/' + postsArr[0].userId.profile_imgUrl %>"
-        alt="<%= postsArr[0].userId.username %>"
-        class="profie-photo"
-      />
-      <% }else{ %>
-      <i class="fa-solid fa-circle-user"></i>
-      <% }%>
-      <h3>
-        <% if(postsArr[0].userId.username){ %>
-        <p class="premium-username">
-          <%= postsArr[0].userId.username %> <% if(postsArr[0].userId.isPremium)
-          {%>
-          <i
-            class="fa-solid fa-star animate__animated animate__swing animate__slow animate__infinite infinite"
-          ></i>
+    <div class="own-user-left">
+      <div class="ic-email">
+        <% if (postsArr[0].userId.profile_imgUrl && postsArr[0].userId.isPremium
+        ){ %>
+        <img
+          src="<%= '/' + postsArr[0].userId.profile_imgUrl %>"
+          alt="<%= postsArr[0].userId.username %>"
+          class="profie-photo"
+        />
+        <% }else{ %>
+        <i class="fa-solid fa-circle-user"></i>
+        <% }%>
+        <h3>
+          <% if(postsArr[0].userId.username){ %>
+          <p class="premium-username">
+            <%= postsArr[0].userId.username %> <%
+            if(postsArr[0].userId.isPremium) {%>
+            <i
+              class="fa-solid fa-star animate__animated animate__swing animate__slow animate__infinite infinite"
+            ></i>
+            <% } %>
+          </p>
+          <% } else { %>
+          <p class="premium-username"><%= postsArr[0].userId.username %></p>
           <% } %>
-        </p>
-        <% } else { %>
-        <p class="premium-username"><%= postsArr[0].userId.username %></p>
-        <% } %>
-      </h3>
-      <p><%= currentUserEmail %></p>
+        </h3>
+        <p><%= currentUserEmail %></p>
+      </div>
     </div>
     <div class="own-user-right">
-      <a href="username">Set Username</a>
       <% if (postsArr[0].userId.isPremium){%>
-      <a href="profile-image">Upload Profile</a>
-      <a href="premium-details">IO Premium Status</a>
+      <div class="own-user-right-premium">
+        <% if (postsArr[0].userId.username){%>
+        <a href="username">Update username</a>
+        <%}else{%>
+        <a href="username">Set username</a>
+        <% }%>
+        <a href="profile-image">Upload Profile</a>
+      </div>
+      <div class="own-user-right-premium">
+        <a href="premium-details">IO Premium Status</a>
+      </div>
       <% } else{%>
-      <a href="premium">Get IO Premium</a>
+      <div class="own-user-right-not-premium">
+        <% if (postsArr[0].userId.username){%>
+        <a href="username">Update username</a>
+        <%}else{%>
+        <a href="username">Set username</a>
+        <% }%>
+        <a href="premium">Get IO Premium</a>
+      </div>
       <% }%>
     </div>
   </div>

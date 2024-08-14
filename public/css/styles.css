@@ -40,12 +40,12 @@ a {
 
 nav {
   width: 60%;
-  margin: 0 auto;
+  margin: 0 auto 20px auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: black;
-  padding: 0 10px;
+  /* padding: 0 10px; */
 }
 
 nav div {
@@ -69,7 +69,7 @@ nav div {
 }
 .post-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
 .post-box {
@@ -99,19 +99,27 @@ nav div {
   font-size: 5rem;
 }
 .own-user {
-  display: flex;
   margin: 40px 0 20px 0;
-  align-items: flex-end;
-  justify-content: space-between;
 }
 
 .own-user .ic-em {
   text-align: center;
 }
 
+.own-user-left {
+  text-align: center;
+}
+
 .own-user-right a {
   text-align: center;
-  width: 100%;
+}
+
+.own-user-right-premium,
+.own-user-right-not-premium {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .details {
@@ -213,7 +221,26 @@ nav div {
 .p-details {
   width: 60%;
   margin: 0 auto;
+  background-color: black;
+  color: white;
+  border-radius: 12px;
+  padding: 20px 0;
 }
+
+.p-details-p {
+  padding: 20px 20px;
+}
+
+.p-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.p-header i {
+  font-size: 30px;
+}
+
 .p-details h1 {
   font-size: 3rem;
 }
@@ -221,6 +248,11 @@ nav div {
 .p-details span {
   font-weight: bold;
 }
+
+.p-details p {
+  margin-bottom: 4px;
+}
+
 .p-details .status {
   background-color: green;
   color: white;
