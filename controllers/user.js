@@ -5,6 +5,7 @@ const stripe = require("stripe")(
 
 const Post = require("../models/post");
 const User = require("../models/user");
+const user = require("../models/user");
 
 const POST_PAR_PAGE = 6;
 
@@ -16,13 +17,18 @@ exports.getProfile = (req, res, next) => {
     .then((totalPostCount) => {
       totalPostNumber = totalPostCount;
       return Post.find({ userId: req.user._id })
-        .populate("userId", "email username isPremium")
+        .populate("userId", "email username isPremium profile_imgUrl")
         .skip((pageNumber - 1) * POST_PAR_PAGE)
         .limit(POST_PAR_PAGE)
         .sort({ createdAt: -1 });
     })
     .then((posts) => {
-      if (posts.length > 0) {
+      if (!posts.length && pageNumber > 1) {
+        return res.status(500).render("error/500", {
+          title: "Something went wrong.",
+          message: "No post in this page query.",
+        });
+      } else {
         return res.render("user/profile", {
           title: req.session.userInfo.email,
           postsArr: posts,
@@ -34,11 +40,6 @@ exports.getProfile = (req, res, next) => {
           currentUserEmail: req.session.userInfo
             ? req.session.userInfo.email
             : "",
-        });
-      } else {
-        return res.status(500).render("error/500", {
-          title: "Something went wrong.",
-          message: "No post in this page query.",
         });
       }
     })
@@ -58,7 +59,7 @@ exports.getPublicProfile = (req, res, next) => {
     .then((totalPostCount) => {
       totalPostNumber = totalPostCount;
       return Post.find({ userId: id })
-        .populate("userId", "email username isPremium")
+        .populate("userId", "email username isPremium profile_imgUrl")
         .skip((pageNumber - 1) * POST_PAR_PAGE)
         .limit(POST_PAR_PAGE)
         .sort({ createdAt: -1 });
@@ -205,6 +206,41 @@ exports.getPremiumDetails = (req, res, next) => {
     .catch((err) => {
       console.log(err);
       const error = new Error("Something went wrong.");
+      return next(error);
+    });
+};
+
+exports.getProfileUploadPage = (req, res) => {
+  res.render("user/profile-upload", { title: "Profile Image", errorMsg: "" });
+};
+
+exports.setProfileImage = (req, res) => {
+  const photo = req.file;
+  const errors = validationResult(req);
+
+  if (photo === undefined) {
+    return res.status(422).render("user/profile-upload", {
+      title: "Profile Image",
+      errorMsg: "Image extension must be jpg,png and jpeg.",
+    });
+  }
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render("user/profile-upload", {
+      title: "Post create",
+      errorMsg: errors.array()[0].msg,
+    });
+  }
+
+  user
+    .findById(req.user._id)
+    .then((user) => {
+      user.profile_imgUrl = photo.path;
+      return user.save();
+    })
+    .then((_) => res.redirect("/admin/profile"))
+    .catch((error) => {
+      console.log(err);
       return next(error);
     });
 };

@@ -201,7 +201,7 @@ nav div {
 /* homepage start*/
 .user-index {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
 }
 .index-user-ic {
   font-size: 60px;
@@ -230,7 +230,8 @@ nav div {
 
 /* subcription success start */
 .s-success {
-  text-align: center;
+  width: 60%;
+  margin: 0 auto;
 }
 .s-success h1 {
   font-size: 3rem;
@@ -358,4 +359,19 @@ button,
 
 .profile-top h1 {
   font-size: 30px;
+}
+
+.profie-photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profie-photo-home {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  margin-right: 7px;
+  object-fit: cover;
 }

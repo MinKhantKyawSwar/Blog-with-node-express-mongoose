@@ -22,9 +22,33 @@
       <p class="post-des"><%= post.description.substr(0,100) %></p>
       <hr />
       <div class="user-index">
+        <% if (post.userId._id.toString()=== currentUserID.toString()){ %>
+        <a href="/admin/profile" class=" index-user-ic">
+          <% if (post.userId.profile_imgUrl &&
+          post.userId.isPremium ){ %>
+          <img
+            src="<%= '/' + post.userId.profile_imgUrl %>"
+            alt="<%= post.userId.username %>"
+            class="profie-photo-home"
+          />
+          <% }else{ %>
+          <i class="fa-solid fa-circle-user index-user-ic"></i>
+          <% }%>
+        </a>
+        <% }else{ %>
         <a href="/profile/<%= post.userId._id %>" class="index-user-ic"
-          ><i class="fa-solid fa-circle-user"></i
-        ></a>
+          ><% if (post.userId.profile_imgUrl &&
+          post.userId.isPremium ){ %>
+          <img
+            src="<%= '/' + post.userId.profile_imgUrl %>"
+            alt="<%= post.userId.username %>"
+            class="profie-photo-home"
+          />
+          <% }else{ %>
+          <i class="fa-solid fa-circle-user"></i>
+          <% }%>
+        </a></a>
+        <% } %>
         <div>
           <p class="post-email"><%= post.userId.email %></p>
           <% if(post.userId.isPremium){%>
@@ -55,3 +79,4 @@
   </div>
   <%- include("./includes/foot") %>
 </section>
+

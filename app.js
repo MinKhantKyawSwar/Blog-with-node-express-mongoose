@@ -14,16 +14,21 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", "views");
 
+//routes
 const postRoutes = require("./routes/post");
 const adminRoutes = require("./routes/admin");
 const authRoutes = require("./routes/auth");
 
+//database model
 const User = require("./models/user");
 
+//error controller
 const errorController = require("./controllers/error");
 
+//middleware for login
 const { isLogin } = require("./middleware/is-login");
 
+//connecting database
 const store = new mongoStore({
   uri: process.env.MONGODB_URI,
   collection: "sessions",
@@ -111,4 +116,3 @@ mongoose
     console.log("connected to mongodb");
   })
   .catch((err) => console.log(err));
-
