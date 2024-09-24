@@ -222,7 +222,7 @@ exports.resetLinkSend = (req, res) => {
           (err) => {
             console.log(err);
             const error = new Error("Something went wrong");
-            return next(error);
+            return error;
           }
         );
       })

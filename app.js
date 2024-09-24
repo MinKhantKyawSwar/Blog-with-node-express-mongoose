@@ -112,7 +112,7 @@ app.use(errorController.get500Page);
 mongoose
   .connect(process.env.MONGODB_URL)
   .then((res) => {
-    app.listen(8080);
+    app.listen(10000);
     console.log("connected to mongodb");
   })
   .catch((err) => console.log(err));
